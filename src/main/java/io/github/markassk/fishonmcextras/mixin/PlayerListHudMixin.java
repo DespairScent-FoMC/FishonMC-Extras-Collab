@@ -15,9 +15,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.Objects;
-import java.util.UUID;
-
 @Mixin(PlayerListHud.class)
 public class PlayerListHudMixin {
     @Unique

@@ -114,7 +114,7 @@ public class PacketHandler {
     }
     //endregion
 
-    protected void sendWrongTypeWarn(PacketHandler.PacketType type) {
+    protected void sendWrongTypeWarn(PacketType type) {
         FishOnMCExtras.LOGGER.warn("Received unsupported type: {}", type);
     }
 

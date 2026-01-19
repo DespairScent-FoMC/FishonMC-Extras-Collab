@@ -22,22 +22,24 @@ public class Lure extends FOMCItem {
     public final String intricacy;
     public final List<LureStats> lureStats;
     public final String size;
+    public final String color;
 
     private Lure(NbtCompound nbtCompound, String type, CustomModelDataComponent customModelData) {
-        super(type, Constant.valueOfId(nbtCompound.getString("rarity")));
-        this.name = nbtCompound.getString("name");
+        super(type, Constant.valueOfId(nbtCompound.getString("rarity").orElse(Constant.COMMON.ID)));
+        this.name = nbtCompound.getString("name").orElse(null);
         this.customModelData = customModelData;
-        this.counter = nbtCompound.getInt("counter");
-        this.water = Constant.valueOfId(nbtCompound.getString("water"));
-        this.intricacy = nbtCompound.getString("intricacy");
-        NbtList nbtList = nbtCompound.getList("base", NbtElement.LIST_TYPE);
+        this.counter = nbtCompound.getInt("counter").orElse(0);
+        this.water = Constant.valueOfId(nbtCompound.getString("water").orElse(Constant.FRESHWATER.ID));
+        this.intricacy = nbtCompound.getString("intricacy").orElse(null);
+        this.color = nbtCompound.getString("color").orElse(null);
+        NbtList nbtList = nbtCompound.getList("base").orElse(new NbtList());
         List<NbtCompound> nbtCompoundList = new ArrayList<>();
         for (int i = 0; i < nbtList.size(); i++) {
-            nbtCompoundList.add(nbtList.getCompound(i));
+            nbtCompoundList.add(nbtList.getCompound(i).orElse(new NbtCompound()));
         }
         this.lureStats = nbtCompoundList.stream().map(LureStats::new).toList();
-        this.totalUses = nbtCompound.getInt("totalUses");
-        this.size = nbtCompound.getString("size");
+        this.totalUses = nbtCompound.getInt("totalUses").orElse(0);
+        this.size = nbtCompound.getString("size").orElse(null);
     }
 
     public static class LureStats {
@@ -45,25 +47,46 @@ public class Lure extends FOMCItem {
         public final String id;
 
         private LureStats(NbtCompound nbtCompound) {
-            this.cur = nbtCompound.getInt("cur");
-            this.id = nbtCompound.getString("id");
+            this.cur = nbtCompound.getInt("cur").orElse(0);
+            this.id = nbtCompound.getString("id").orElse(null);
         }
     }
 
     public static Lure getLure(ItemStack itemStack, String type) {
-        return new Lure(Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)), type, itemStack.get(DataComponentTypes.CUSTOM_MODEL_DATA));
+        return new Lure(Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)), type,
+                itemStack.get(DataComponentTypes.CUSTOM_MODEL_DATA));
     }
 
     public static Lure getLure(ItemStack itemStack) {
-        if(itemStack.get(DataComponentTypes.LORE) != null
+        if (itemStack.get(DataComponentTypes.LORE) != null
                 && itemStack.get(DataComponentTypes.CUSTOM_DATA) != null
-                && !Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("shopitem")) {
+                && !Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("shopitem").orElse(false)) {
             NbtCompound nbtCompound = ItemStackHelper.getNbt(itemStack);
             if (nbtCompound != null && nbtCompound.contains("type")
-                    && Objects.equals(nbtCompound.getString("type"), Defaults.ItemTypes.LURE)) {
+                    && Objects.equals(nbtCompound.getString("type").orElse(""), Defaults.ItemTypes.LURE)) {
                 return Lure.getLure(itemStack, Defaults.ItemTypes.LURE);
             }
         }
         return null;
+    }
+
+    public int calculateLures(List<FOMCItem> tacklebox) {
+        int lureQty = 0;
+        String name = this.name;
+        String rarity = this.rarity.ID;
+        String color = this.color;
+
+        for (FOMCItem entry : tacklebox) {
+            if (entry instanceof Lure lure
+                    && lure.name.equals(name)
+                    && lure.rarity.ID.equals(rarity)
+                    && lure.color.equals(color)) {
+                lureQty += lure.counter;
+                continue;
+            }
+            break;
+        }
+
+        return lureQty;
     }
 }

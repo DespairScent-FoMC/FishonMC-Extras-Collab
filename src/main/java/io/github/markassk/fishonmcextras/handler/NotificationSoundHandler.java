@@ -8,7 +8,6 @@ import net.minecraft.sound.SoundEvents;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class NotificationSoundHandler {
     private static NotificationSoundHandler INSTANCE = new NotificationSoundHandler();

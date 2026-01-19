@@ -19,9 +19,9 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.decoration.DisplayEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FishingBobberEntity;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
@@ -60,10 +60,10 @@ public class FishingRodHandler {
     }
 
     public void tick(MinecraftClient minecraftClient) {
-        if(minecraftClient.player != null && minecraftClient.player.getInventory().main.getFirst().getItem() == Items.FISHING_ROD) {
-            if(this.fishingRodStack == null || !this.fishingRodStack.equals(minecraftClient.player.getInventory().main.getFirst())) {
-                this.fishingRodStack = minecraftClient.player.getInventory().main.getFirst();
-                FishingRod fishingRod = FishingRod.getFishingRod(minecraftClient.player.getInventory().main.getFirst());
+        if(minecraftClient.player != null && minecraftClient.player.getInventory().getMainStacks().getFirst().getItem() == Items.FISHING_ROD) {
+            if(this.fishingRodStack == null || !this.fishingRodStack.equals(minecraftClient.player.getInventory().getMainStacks().getFirst())) {
+                this.fishingRodStack = minecraftClient.player.getInventory().getMainStacks().getFirst();
+                FishingRod fishingRod = FishingRod.getFishingRod(minecraftClient.player.getInventory().getMainStacks().getFirst());
                 if(fishingRod != null) {
                     this.fishingRod = fishingRod;
                 }
@@ -193,7 +193,7 @@ public class FishingRodHandler {
                     itemDisplayEntity.setItemStack(baitStack);
                     itemDisplayEntity.setPosition(entity.getPos().add(0, -0.32, 0));
                     itemDisplayEntity.setBillboardMode(DisplayEntity.BillboardMode.VERTICAL);
-                    itemDisplayEntity.setTransformationMode(ModelTransformationMode.GROUND);
+                    itemDisplayEntity.setItemDisplayContext(ItemDisplayContext.GROUND);
                     itemDisplayEntity.setTransformation(new AffineTransformation(null, null, new Vector3f(0.75f, 0.75f, 0.75f), null));
                 }
             }

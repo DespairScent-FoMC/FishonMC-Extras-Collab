@@ -13,6 +13,12 @@ public class NbtHelper {
         String json = gson.toJson(NbtCompound.CODEC.encodeStart(JsonOps.INSTANCE, nbtCompound).getOrThrow());
         json = json.replace("\"show_in_tooltip\":0", "\"show_in_tooltip\":false");
         json = json.replace("\"show_in_tooltip\":1", "\"show_in_tooltip\":true");
+        json = json.replace(",\"minecraft:hide_additional_tooltip\":{}", "");
+        json = json.replace("\"minecraft:hide_additional_tooltip\":{},", "");
+        json = json.replace(",\"modifiers\":[]", "");
+        json = json.replace("\"modifiers\":[],", "");
+        json = json.replace("{\"show_in_tooltip\":false}", "[]");
+        json = json.replace("{\"show_in_tooltip\":true}", "[]");
         return json;
     }
 

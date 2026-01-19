@@ -11,8 +11,6 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
@@ -45,38 +43,39 @@ public class ArmorHandler {
             return;
         }
 
-        if(!currentBootsItem.equals(minecraftClient.player.getInventory().armor.get(EquipmentSlot.FEET.getEntitySlotId())) &&
-                minecraftClient.player.getInventory().armor.get(EquipmentSlot.FEET.getEntitySlotId()).getItem() == Items.LEATHER_BOOTS) {
-            Armor armor = Armor.getArmor(minecraftClient.player.getInventory().armor.get(EquipmentSlot.FEET.getEntitySlotId()));
+        if(!currentBootsItem.equals(minecraftClient.player.getEquippedStack(EquipmentSlot.FEET)) &&
+                minecraftClient.player.getEquippedStack(EquipmentSlot.FEET).getItem() == Items.LEATHER_BOOTS) {
+            Armor armor = Armor.getArmor(minecraftClient.player.getEquippedStack(EquipmentSlot.FEET));
             if(armor != null) {
-                this.currentBootsItem = minecraftClient.player.getInventory().armor.get(EquipmentSlot.FEET.getEntitySlotId());
+                this.currentBootsItem = minecraftClient.player.getEquippedStack(EquipmentSlot.FEET);
                 this.currentBoots = armor;
             }
-        } else if (minecraftClient.player.getInventory().armor.get(EquipmentSlot.FEET.getEntitySlotId()).isEmpty()) {
+        } else if (minecraftClient.player.getEquippedStack(EquipmentSlot.FEET).isEmpty()) {
             this.currentBootsItem = Items.AIR.getDefaultStack();
             this.currentBoots = null;
         }
 
-        if(!currentLeggingsItem.equals(minecraftClient.player.getInventory().armor.get(EquipmentSlot.LEGS.getEntitySlotId())) &&
-                minecraftClient.player.getInventory().armor.get(EquipmentSlot.LEGS.getEntitySlotId()).getItem() == Items.LEATHER_LEGGINGS) {
-            Armor armor = Armor.getArmor(minecraftClient.player.getInventory().armor.get(EquipmentSlot.LEGS.getEntitySlotId()));
+        if(!currentLeggingsItem.equals(minecraftClient.player.getEquippedStack(EquipmentSlot.LEGS)) &&
+                minecraftClient.player.getEquippedStack(EquipmentSlot.LEGS).getItem() == Items.LEATHER_LEGGINGS) {
+            Armor armor = Armor.getArmor(minecraftClient.player.getEquippedStack(EquipmentSlot.LEGS));
             if(armor != null) {
-                this.currentLeggingsItem = minecraftClient.player.getInventory().armor.get(EquipmentSlot.LEGS.getEntitySlotId());
+                this.currentLeggingsItem = minecraftClient.player.getEquippedStack(EquipmentSlot.LEGS);
                 this.currentLeggings = armor;
             }
-        } else if (minecraftClient.player.getInventory().armor.get(EquipmentSlot.LEGS.getEntitySlotId()).isEmpty()) {
+
+        } else if (minecraftClient.player.getEquippedStack(EquipmentSlot.LEGS).isEmpty()) {
             this.currentLeggingsItem = Items.AIR.getDefaultStack();
             this.currentLeggings = null;
         }
 
-        if(!currentChestplateItem.equals(minecraftClient.player.getInventory().armor.get(EquipmentSlot.CHEST.getEntitySlotId())) &&
-                minecraftClient.player.getInventory().armor.get(EquipmentSlot.CHEST.getEntitySlotId()).getItem() == Items.LEATHER_CHESTPLATE) {
-            Armor armor = Armor.getArmor(minecraftClient.player.getInventory().armor.get(EquipmentSlot.CHEST.getEntitySlotId()));
+        if(!currentChestplateItem.equals(minecraftClient.player.getEquippedStack(EquipmentSlot.CHEST)) &&
+                minecraftClient.player.getEquippedStack(EquipmentSlot.CHEST).getItem() == Items.LEATHER_CHESTPLATE) {
+            Armor armor = Armor.getArmor(minecraftClient.player.getEquippedStack(EquipmentSlot.CHEST));
             if(armor != null) {
-                this.currentChestplateItem = minecraftClient.player.getInventory().armor.get(EquipmentSlot.CHEST.getEntitySlotId());
+                this.currentChestplateItem = minecraftClient.player.getEquippedStack(EquipmentSlot.CHEST);
                 this.currentChestplate = armor;
             }
-        } else if (minecraftClient.player.getInventory().armor.get(EquipmentSlot.CHEST.getEntitySlotId()).isEmpty()){
+        } else if (minecraftClient.player.getEquippedStack(EquipmentSlot.CHEST).isEmpty()) {
             this.currentChestplateItem = Items.AIR.getDefaultStack();
             this.currentChestplate = null;
         }
@@ -100,7 +99,7 @@ public class ArmorHandler {
                 int offsetSlot = 0;
 
                 NbtCompound nbtCompound = ItemStackHelper.getNbt(itemStack);
-                if(nbtCompound != null && nbtCompound.contains("renderInfo", NbtElement.LIST_TYPE)) {
+                if(nbtCompound != null && nbtCompound.contains("renderInfo")) {
                     offsetSlot = 7;
                 }
 

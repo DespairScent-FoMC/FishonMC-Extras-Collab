@@ -1,8 +1,7 @@
 package io.github.markassk.fishonmcextras.mixin;
 
-import io.github.markassk.fishonmcextras.handler.LoadingHandler;
 import io.github.markassk.fishonmcextras.handler.ItemMarkerHandler;
-import io.github.markassk.fishonmcextras.handler.PersonalVaultScreenHandler;
+import io.github.markassk.fishonmcextras.handler.LoadingHandler;
 import io.github.markassk.fishonmcextras.handler.SearchBarContainerHandler;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;

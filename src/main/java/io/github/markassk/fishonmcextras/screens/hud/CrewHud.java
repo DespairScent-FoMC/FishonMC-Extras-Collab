@@ -3,14 +3,15 @@ package io.github.markassk.fishonmcextras.screens.hud;
 import io.github.markassk.fishonmcextras.FOMC.Constant;
 import io.github.markassk.fishonmcextras.common.Theming;
 import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
-import io.github.markassk.fishonmcextras.handler.*;
+import io.github.markassk.fishonmcextras.handler.BossBarHandler;
+import io.github.markassk.fishonmcextras.handler.CrewHandler;
+import io.github.markassk.fishonmcextras.handler.ThemingHandler;
 import io.github.markassk.fishonmcextras.handler.screens.hud.CrewHudHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
 
 public class CrewHud {
     public void render(DrawContext drawContext, MinecraftClient client) {

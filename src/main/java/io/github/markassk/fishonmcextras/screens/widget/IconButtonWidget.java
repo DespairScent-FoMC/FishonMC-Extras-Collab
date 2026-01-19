@@ -28,8 +28,8 @@ public class IconButtonWidget extends ClickableWidget {
     private final boolean isLoader;
     private final ClickCallback clickCallback;
 
-    public static IconButtonWidget.Builder builder(Text text, ClickCallback onClick) {
-        return new IconButtonWidget.Builder(text, onClick);
+    public static Builder builder(Text text, ClickCallback onClick) {
+        return new Builder(text, onClick);
     }
 
     private IconButtonWidget(TextRenderer textRenderer, int x, int y, int width, int height, Text text, ItemStack itemIcon, String stringIcon, boolean isLoader, ClickCallback clickCallback) {

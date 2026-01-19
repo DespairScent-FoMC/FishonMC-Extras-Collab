@@ -1,14 +1,15 @@
 package io.github.markassk.fishonmcextras;
 
 import io.github.markassk.fishonmcextras.commands.CommandRegistry;
+import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 import io.github.markassk.fishonmcextras.handler.*;
 import io.github.markassk.fishonmcextras.handler.packet.PacketHandler;
 import io.github.markassk.fishonmcextras.screens.hud.MainHudRenderer;
 import io.github.markassk.fishonmcextras.screens.main.FoETitleScreen;
 import io.github.markassk.fishonmcextras.screens.petCalculator.PetCalculatorScreen;
-import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 import io.github.markassk.fishonmcextras.screens.widget.IconButtonWidget;
 import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -18,9 +19,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
-import net.minecraft.client.MinecraftClient;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -100,6 +100,7 @@ public class FishOnMCExtrasClient implements ClientModInitializer {
                     OwnPlayerHandler.instance().tick(minecraftClient);
                     PlayerStatusHandler.instance().tick(minecraftClient);
                     TimerHandler.instance().tick();
+                    EventHandler.instance().onEventTick();
                 }
             }
         }
@@ -143,6 +144,7 @@ public class FishOnMCExtrasClient implements ClientModInitializer {
             PlayerStatusHandler.instance().onReceiveMessage(text);
             TimerHandler.instance().onReceiveMessage(text);
             EventHandler.instance().onReceiveMessage(text);
+            AutoTippingHandler.instance().onReceiveMessage(text);
         }
     }
 

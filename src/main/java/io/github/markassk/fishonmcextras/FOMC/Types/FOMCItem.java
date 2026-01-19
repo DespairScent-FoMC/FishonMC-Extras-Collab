@@ -19,11 +19,11 @@ public class FOMCItem {
     }
 
     public static FOMCItem getFOMCItem(ItemStack itemStack) {
-        if(itemStack.get(DataComponentTypes.CUSTOM_DATA) != null && !Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("shopitem")) {
+        if(itemStack.get(DataComponentTypes.CUSTOM_DATA) != null && ItemStackHelper.getNbt(itemStack) != null && !Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("shopitem").orElse(false)) {
             NbtCompound nbtCompound = ItemStackHelper.getNbt(itemStack);
             if (nbtCompound != null && nbtCompound.contains("type")) {
                 // Check for types
-                return switch (nbtCompound.getString("type")) {
+                return switch (nbtCompound.getString("type").orElse("null")) {
                     case Defaults.ItemTypes.PET -> Pet.getPet(itemStack, Defaults.ItemTypes.PET);
                     case Defaults.ItemTypes.SHARD -> Shard.getShard(itemStack, Defaults.ItemTypes.SHARD);
                     case Defaults.ItemTypes.ARMOR -> Armor.getArmor(itemStack, Defaults.ItemTypes.ARMOR);
@@ -45,10 +45,12 @@ public class FOMCItem {
                     || itemStack.getItem() == Items.GOLD_INGOT
                     || itemStack.getItem() == Items.PRISMARINE_SHARD
                     || itemStack.getItem() == Items.DRIED_KELP
+                    || itemStack.getItem() == Items.BONE
+                    || itemStack.getItem() == Items.LIGHT_BLUE_DYE
             ) {
                 String line = Objects.requireNonNull(itemStack.getComponents().get(DataComponentTypes.LORE)).lines().get(15).getString();
                 return Fish.getFish(itemStack, Defaults.ItemTypes.FISH, line.substring(line.lastIndexOf(" ") + 1));
-            } else if (itemStack.getItem() == Items.FISHING_ROD) {
+            } else if (itemStack.getItem() == Items.FISHING_ROD && Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("soulbound_rod").isPresent()) {
                 return FishingRod.getFishingRod(itemStack, Defaults.ItemTypes.FISHINGROD, itemStack.getName().getString());
             }
         }
@@ -58,11 +60,11 @@ public class FOMCItem {
     public static boolean isFOMCItem(ItemStack itemStack) {
         if(itemStack.get(DataComponentTypes.LORE) != null
                 && itemStack.get(DataComponentTypes.CUSTOM_DATA) != null
-                && !Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("shopitem")) {
+                && !Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("shopitem").orElse(false)) {
             NbtCompound nbtCompound = ItemStackHelper.getNbt(itemStack);
             if (nbtCompound != null && nbtCompound.contains("type")) {
                 // Check for types
-                return switch (nbtCompound.getString("type")) {
+                return switch (nbtCompound.getString("type").orElse("null")) {
                     case Defaults.ItemTypes.PET, Defaults.ItemTypes.REEL, Defaults.ItemTypes.POLE,
                          Defaults.ItemTypes.LINE, Defaults.ItemTypes.LURE, Defaults.ItemTypes.BAIT,
                          Defaults.ItemTypes.ARMOR, Defaults.ItemTypes.SHARD, Defaults.ItemTypes.CRAFTINGCOMPONENT,
@@ -78,6 +80,8 @@ public class FOMCItem {
                         || itemStack.getItem() == Items.GOLD_INGOT
                         || itemStack.getItem() == Items.PRISMARINE_SHARD
                         || itemStack.getItem() == Items.DRIED_KELP
+                        || itemStack.getItem() == Items.BONE
+                        || itemStack.getItem() == Items.LIGHT_BLUE_DYE
                         || itemStack.getItem() == Items.FISHING_ROD;
             }
         }
@@ -88,7 +92,7 @@ public class FOMCItem {
         if(itemStack.get(DataComponentTypes.CUSTOM_DATA) != null && itemStack.getItem() != Items.FISHING_ROD) {
             NbtCompound nbtCompound = ItemStackHelper.getNbt(itemStack);
             if(nbtCompound != null) {
-                return Constant.valueOfId(nbtCompound.getString("rarity"));
+                return Constant.valueOfId(nbtCompound.getString("rarity").orElse("default"));
             }
         }
         return Constant.DEFAULT;
@@ -102,7 +106,9 @@ public class FOMCItem {
                     || itemStack.getItem() == Items.GOLD_INGOT
                     || itemStack.getItem() == Items.ROTTEN_FLESH
                     || itemStack.getItem() == Items.PRISMARINE_SHARD
-                    || itemStack.getItem() == Items.DRIED_KELP;
+                    || itemStack.getItem() == Items.DRIED_KELP
+                    || itemStack.getItem() == Items.BONE
+                    || itemStack.getItem() == Items.LIGHT_BLUE_DYE;
         }
         return false;
     }
@@ -111,7 +117,7 @@ public class FOMCItem {
         if(itemStack.get(DataComponentTypes.CUSTOM_DATA) != null) {
             NbtCompound nbtCompound = ItemStackHelper.getNbt(itemStack);
             if (nbtCompound != null && nbtCompound.contains("type")) {
-                return Objects.equals(nbtCompound.getString("type"), Defaults.ItemTypes.PET) ? new boolean[]{true, nbtCompound.contains("skin"), nbtCompound.contains("item"), nbtCompound.contains("trail")} : new boolean[]{false};
+                return Objects.equals(nbtCompound.getString("type").orElse(null), Defaults.ItemTypes.PET) ? new boolean[]{true, nbtCompound.contains("skin"), nbtCompound.contains("item"), nbtCompound.contains("trail")} : new boolean[]{false};
             }
         }
         return new boolean[]{false};
@@ -121,7 +127,7 @@ public class FOMCItem {
         if(itemStack.get(DataComponentTypes.CUSTOM_DATA) != null) {
             NbtCompound nbtCompound = ItemStackHelper.getNbt(itemStack);
             if (nbtCompound != null && nbtCompound.contains("type")) {
-                return Objects.equals(nbtCompound.getString("type"), Defaults.ItemTypes.ARMOR);
+                return Objects.equals(nbtCompound.getString("type").orElse(null), Defaults.ItemTypes.ARMOR);
             }
         }
         return false;
@@ -131,7 +137,7 @@ public class FOMCItem {
         if(itemStack.get(DataComponentTypes.CUSTOM_DATA) != null) {
             NbtCompound nbtCompound = ItemStackHelper.getNbt(itemStack);
             if (nbtCompound != null && nbtCompound.contains("type")) {
-                return Objects.equals(nbtCompound.getString("type"), Defaults.ItemTypes.LURE);
+                return Objects.equals(nbtCompound.getString("type").orElse(null), Defaults.ItemTypes.LURE);
             }
         }
         return false;
@@ -141,7 +147,7 @@ public class FOMCItem {
         if(itemStack.get(DataComponentTypes.CUSTOM_DATA) != null) {
             NbtCompound nbtCompound = ItemStackHelper.getNbt(itemStack);
             if (nbtCompound != null && nbtCompound.contains("type")) {
-                return Objects.equals(nbtCompound.getString("type"), Defaults.ItemTypes.BAIT);
+                return Objects.equals(nbtCompound.getString("type").orElse(null), Defaults.ItemTypes.BAIT);
             }
         }
         return false;

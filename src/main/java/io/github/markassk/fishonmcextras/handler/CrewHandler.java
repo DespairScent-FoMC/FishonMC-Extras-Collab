@@ -68,7 +68,7 @@ public class CrewHandler {
                 if (
                         minecraftClient.player.currentScreenHandler.getSlot(i).inventory != minecraftClient.player.getInventory() && itemStack.getItem() == Items.PLAYER_HEAD
                                 && Objects.requireNonNull(itemStack.get(DataComponentTypes.PROFILE)).id().isPresent()) {
-                    if(uuids.stream().noneMatch(uuid -> uuid.equals(Objects.requireNonNull(itemStack.get(DataComponentTypes.PROFILE)).id().get()))) {
+                    if(uuids.stream().noneMatch(uuid -> uuid.equals(Objects.requireNonNull(itemStack.get(DataComponentTypes.PROFILE)).id().orElse(UUID.randomUUID())))) {
                         uuids.add(Objects.requireNonNull(itemStack.get(DataComponentTypes.PROFILE)).id().get());
                     }
                 }
@@ -142,7 +142,7 @@ public class CrewHandler {
                 && MinecraftClient.getInstance().currentScreen instanceof ChatScreen chatScreen
                 && ProfileDataHandler.instance().profileData.isInCrewChat
                 && !((ChatScreenAccessor) chatScreen).getChatField().getText().startsWith("/")
-                && config.crewTracker.crewChatLocation == CrewHandler.CrewChatLocation.IN_CHAT
+                && config.crewTracker.crewChatLocation == CrewChatLocation.IN_CHAT
                 && ((ChatScreenAccessor) chatScreen).getChatField().isVisible()) {
             context.drawText(textRenderer, marker, 16 + xCoord, yCoord - 1, ((int) 150f << 24) | 0xFFFFFF, true);
         }

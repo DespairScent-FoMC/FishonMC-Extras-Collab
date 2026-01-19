@@ -8,12 +8,12 @@ import net.minecraft.util.Formatting;
 
 import java.util.concurrent.TimeUnit;
 
-public class BaitShopTimerWidget extends TimerWidget {
-    public BaitShopTimerWidget(int x, int y) {
+public class MoonTimerWidget extends TimerWidget {
+    public MoonTimerWidget(int x, int y) {
         super(x, y);
     }
 
-    public BaitShopTimerWidget(int x, int y, ClickCallback clickCallback) {
+    public MoonTimerWidget(int x, int y, ClickCallback clickCallback) {
         super(x, y, clickCallback);
     }
 
@@ -21,14 +21,15 @@ public class BaitShopTimerWidget extends TimerWidget {
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
 
-        long hours = TimeUnit.MILLISECONDS.toHours(TimerHandler.instance().baitShopTimer);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(TimerHandler.instance().baitShopTimer) % 60;
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(TimerHandler.instance().baitShopTimer) % 60;
+        long hours = TimeUnit.MILLISECONDS.toHours(TimerHandler.instance().moonTimer);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(TimerHandler.instance().moonTimer) % 60;
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(TimerHandler.instance().moonTimer) % 60;
         Text time = Text.literal(String.format("%02d:%02d:%02d", hours, minutes, seconds)).formatted(Formatting.GRAY);
 
         context.drawText(textRenderer, time, this.getX() - textRenderer.getWidth(time), this.getY(), 0xFFFFFF, true);
 
-        float percentage = (float) TimerHandler.instance().baitShopTimer / TimerHandler.instance().baitShopTotalTime;
+        long total = 160L * 60L * 1000L; // 160 minutes between starts
+        float percentage = (float) TimerHandler.instance().moonTimer / (float) total;
         int dashes = 14;
         int grayDashes = Math.round(dashes * percentage);
         int greenDashes = dashes - grayDashes;
@@ -40,6 +41,5 @@ public class BaitShopTimerWidget extends TimerWidget {
                 Text.literal("|").formatted(Formatting.WHITE)
         );
         context.drawText(textRenderer, bar, this.getX() - textRenderer.getWidth(bar), this.getY() + textRenderer.fontHeight, 0xFFFFFF, true);
-
     }
 }

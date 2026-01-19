@@ -9,7 +9,6 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.CustomModelDataComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import java.util.UUID;
 
 public class Armor extends FOMCItem {
     public final List<ArmorBonus> armorBonuses;
-    public final UUID id;
     public final CustomModelDataComponent customModelData;
     public final int color;
     public final int quality;
@@ -32,34 +30,33 @@ public class Armor extends FOMCItem {
     public final ArmorStat prospect;
 
     private Armor(NbtCompound nbtCompound, String type, CustomModelDataComponent customModelData) {
-        super(type, Constant.valueOfId(nbtCompound.getString("rarity")));
+        super(type, Constant.valueOfId(nbtCompound.getString("rarity").orElse(Constant.COMMON.ID)));
         List<ArmorBonus> tempArmorBonuses;
         NbtList nbtFishBonusList = (NbtList) nbtCompound.get("fish_bonus");
         tempArmorBonuses = new ArrayList<>();
         if(nbtFishBonusList != null) {
             tempArmorBonuses = List.of(
-                    new ArmorBonus(nbtFishBonusList.getCompound(0)),
-                    new ArmorBonus(nbtFishBonusList.getCompound(1)),
-                    new ArmorBonus(nbtFishBonusList.getCompound(2)),
-                    new ArmorBonus(nbtFishBonusList.getCompound(3)),
-                    new ArmorBonus(nbtFishBonusList.getCompound(4))
+                    new ArmorBonus(nbtFishBonusList.getCompound(0).orElse(new NbtCompound())),
+                    new ArmorBonus(nbtFishBonusList.getCompound(1).orElse(new NbtCompound())),
+                    new ArmorBonus(nbtFishBonusList.getCompound(2).orElse(new NbtCompound())),
+                    new ArmorBonus(nbtFishBonusList.getCompound(3).orElse(new NbtCompound())),
+                    new ArmorBonus(nbtFishBonusList.getCompound(4).orElse(new NbtCompound()))
             );
         }
         this.armorBonuses = tempArmorBonuses;
-        this.id = UUIDHelper.getUUID(nbtCompound.getIntArray("itemUUID"));
         this.customModelData = customModelData;
-        this.color = ColorHelper.getColorFromNbt(nbtCompound.getString("rgb"));
-        this.quality = nbtCompound.getInt("quality");
-        this.identified = nbtCompound.getBoolean("identified");
-        this.armorPiece = nbtCompound.getString("piece");
-        this.climate = ClimateConstant.valueOfId(nbtCompound.getString("name"));
-        this.crafter = UUIDHelper.getUUID(nbtCompound.getIntArray("uuid"));
+        this.color = ColorHelper.getColorFromNbt(nbtCompound.getString("rgb").orElse("255, 255, 255"));
+        this.quality = nbtCompound.getInt("quality").orElse(0);
+        this.identified = nbtCompound.getBoolean("identified").orElse(false);
+        this.armorPiece = nbtCompound.getString("piece").orElse(null);
+        this.climate = ClimateConstant.valueOfId(nbtCompound.getString("name").orElse(ClimateConstant.DEFAULT.ID));
+        this.crafter = UUIDHelper.getUUID(nbtCompound.getIntArray("uuid").orElse(new int[]{0}));
 
         NbtList armorStatsList = (NbtList) nbtCompound.get("base");
         if(armorStatsList != null) {
-            this.luck = new ArmorStat(armorStatsList.getCompound(0));
-            this.scale = new ArmorStat(armorStatsList.getCompound(1));
-            this.prospect = new ArmorStat(armorStatsList.getCompound(2));
+            this.luck = new ArmorStat(armorStatsList.getCompound(0).orElse(new NbtCompound()));
+            this.scale = new ArmorStat(armorStatsList.getCompound(1).orElse(new NbtCompound()));
+            this.prospect = new ArmorStat(armorStatsList.getCompound(2).orElse(new NbtCompound()));
         } else {
             this.luck = new ArmorStat();
             this.scale = new ArmorStat();
@@ -78,12 +75,12 @@ public class Armor extends FOMCItem {
         public final String id;
 
         private ArmorBonus(NbtCompound nbtCompound) {
-            this.tier = nbtCompound.getInt("tier");
-            this.rolled = nbtCompound.getBoolean("rolled");
-            this.rolls = nbtCompound.getInt("rolls");
-            this.unlocked = nbtCompound.getBoolean("unlocked");
-            this.cur = nbtCompound.getFloat("cur");
-            this.id = nbtCompound.getString("id");
+            this.tier = nbtCompound.getInt("tier").orElse(0);
+            this.rolled = nbtCompound.getBoolean("rolled").orElse(false);
+            this.rolls = nbtCompound.getInt("rolls").orElse(0);
+            this.unlocked = nbtCompound.getBoolean("unlocked").orElse(false);
+            this.cur = nbtCompound.getFloat("cur").orElse(0f);
+            this.id = nbtCompound.getString("id").orElse(null);
         }
     }
 
@@ -92,8 +89,8 @@ public class Armor extends FOMCItem {
         public final float max;
 
         private ArmorStat(NbtCompound nbtCompound) {
-            this.amount = nbtCompound.getInt("cur");
-            this.max = nbtCompound.getFloat("max");
+            this.amount = nbtCompound.getInt("cur").orElse(0);
+            this.max = nbtCompound.getFloat("max").orElse(0f);
         }
 
         private ArmorStat() {
@@ -109,10 +106,10 @@ public class Armor extends FOMCItem {
     public static Armor getArmor(ItemStack itemStack) {
         if(itemStack.get(DataComponentTypes.LORE) != null
                 && itemStack.get(DataComponentTypes.CUSTOM_DATA) != null
-                && !Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("shopitem")) {
+                && !Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("shopitem").orElse(false)) {
             NbtCompound nbtCompound = ItemStackHelper.getNbt(itemStack);
             if (nbtCompound != null && nbtCompound.contains("type")
-                    && Objects.equals(nbtCompound.getString("type"), Defaults.ItemTypes.ARMOR)) {
+                    && Objects.equals(nbtCompound.getString("type").orElse(""), Defaults.ItemTypes.ARMOR)) {
                 return Armor.getArmor(itemStack, Defaults.ItemTypes.ARMOR);
             }
         }

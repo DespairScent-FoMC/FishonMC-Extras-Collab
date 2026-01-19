@@ -104,7 +104,6 @@ public class StatsImportHandler {
             dummyProfileData.variantDryStreak.put(Constant.MELANISTIC, Math.min(fishCaught.get() - (oldProfileData.allFishCaughtCount - oldProfileData.variantDryStreak.getOrDefault(Constant.MELANISTIC, oldProfileData.allFishCaughtCount)), fishCaught.get()));
             dummyProfileData.variantDryStreak.put(Constant.TROPHY, Math.min(fishCaught.get() - (oldProfileData.allFishCaughtCount - oldProfileData.variantDryStreak.getOrDefault(Constant.TROPHY, oldProfileData.allFishCaughtCount)), fishCaught.get()));
             dummyProfileData.variantDryStreak.put(Constant.FABLED, Math.min(fishCaught.get() - (oldProfileData.allFishCaughtCount - oldProfileData.variantDryStreak.getOrDefault(Constant.FABLED, oldProfileData.allFishCaughtCount)), fishCaught.get()));
-
             this.dummyProfileData = dummyProfileData;
         }
     }

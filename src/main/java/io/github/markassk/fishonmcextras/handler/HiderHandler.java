@@ -8,7 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HiderHandler {
     private static HiderHandler INSTANCE = new HiderHandler();

@@ -31,9 +31,9 @@ public class FishingRod extends FOMCItem {
         super(type, Constant.DEFAULT);
         this.name = name;
         this.customModelData = customModelData;
-        this.soulboundRod = nbtCompound.getBoolean("soulbound_rod");
-        this.skin = nbtCompound.getString("skin");
-        this.owner = UUIDHelper.getUUID(nbtCompound.getIntArray("uuid"));
+        this.soulboundRod = nbtCompound.getBoolean("soulbound_rod").orElse(false);
+        this.skin = nbtCompound.getString("skin").orElse(null);
+        this.owner = UUIDHelper.getUUID(nbtCompound.getIntArray("uuid").orElse(new int[]{0}));
 
         if(nbtCompound.get("tacklebox") instanceof NbtList nbtList) {
             this.tacklebox = nbtList.stream().map(nbtElement -> {
@@ -82,8 +82,8 @@ public class FishingRod extends FOMCItem {
     public static FishingRod getFishingRod(ItemStack itemStack) {
         if(itemStack.get(DataComponentTypes.LORE) != null
                 && itemStack.get(DataComponentTypes.CUSTOM_DATA) != null
-                && !Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("shopitem")) {
-            if (itemStack.getItem() == Items.FISHING_ROD) {
+                && !Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("shopitem").orElse(false)) {
+            if (itemStack.getItem() == Items.FISHING_ROD && Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("soulbound_rod").isPresent()) {
                 return FishingRod.getFishingRod(itemStack, Defaults.ItemTypes.FISHINGROD, itemStack.getName().getString());
             }
         }

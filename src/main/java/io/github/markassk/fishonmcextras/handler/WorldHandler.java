@@ -1,6 +1,5 @@
 package io.github.markassk.fishonmcextras.handler;
 
-import io.github.markassk.fishonmcextras.config.FishOnMCExtrasConfig;
 import net.minecraft.client.MinecraftClient;
 
 public class WorldHandler {

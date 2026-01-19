@@ -2,36 +2,31 @@ package io.github.markassk.fishonmcextras.FOMC.Types;
 
 import io.github.markassk.fishonmcextras.FOMC.Constant;
 import io.github.markassk.fishonmcextras.util.ItemStackHelper;
-import io.github.markassk.fishonmcextras.util.UUIDHelper;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.CustomModelDataComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class Line extends FOMCItem {
     public final String name;
     public final CustomModelDataComponent customModelData;
-    public final UUID id;
     public final Constant water;
     public final List<LineStats> lineStats;
 
     private Line(NbtCompound nbtCompound, String type, CustomModelDataComponent customModelData) {
-        super(type, Constant.valueOfId(nbtCompound.getString("rarity")));
-        this.name = nbtCompound.getString("name");
+        super(type, Constant.valueOfId(nbtCompound.getString("rarity").orElse(Constant.COMMON.ID)));
+        this.name = nbtCompound.getString("name").orElse(null);
         this.customModelData = customModelData;
-        this.id = UUIDHelper.getUUID(nbtCompound.getIntArray("id"));
-        this.water = Constant.valueOfId(nbtCompound.getString("water"));
-        NbtList nbtList = nbtCompound.getList("base", NbtElement.LIST_TYPE);
+        this.water = Constant.valueOfId(nbtCompound.getString("water").orElse(Constant.FRESHWATER.ID));
+        NbtList nbtList = nbtCompound.getList("base").orElse(new NbtList());
         List<NbtCompound> nbtCompoundList = new ArrayList<>();
         for (int i = 0; i < nbtList.size(); i++) {
-            nbtCompoundList.add(nbtList.getCompound(i));
+            nbtCompoundList.add(nbtList.getCompound(i).orElse(new NbtCompound()));
         }
         this.lineStats = nbtCompoundList.stream().map(LineStats::new).toList();
     }
@@ -41,8 +36,8 @@ public class Line extends FOMCItem {
         public final String id;
 
         private LineStats(NbtCompound nbtCompound) {
-            this.cur = nbtCompound.getInt("cur");
-            this.id = nbtCompound.getString("id");
+            this.cur = nbtCompound.getInt("cur").orElse(0);
+            this.id = nbtCompound.getString("id").orElse(null);
         }
     }
 
@@ -53,10 +48,10 @@ public class Line extends FOMCItem {
     public static Line getLine(ItemStack itemStack) {
         if(itemStack.get(DataComponentTypes.LORE) != null
                 && itemStack.get(DataComponentTypes.CUSTOM_DATA) != null
-                && !Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("shopitem")) {
+                && !Objects.requireNonNull(ItemStackHelper.getNbt(itemStack)).getBoolean("shopitem").orElse(false)) {
             NbtCompound nbtCompound = ItemStackHelper.getNbt(itemStack);
             if (nbtCompound != null && nbtCompound.contains("type")
-                    && Objects.equals(nbtCompound.getString("type"), Defaults.ItemTypes.LINE)) {
+                    && Objects.equals(nbtCompound.getString("type").orElse(""), Defaults.ItemTypes.LINE)) {
                 return Line.getLine(itemStack, Defaults.ItemTypes.LINE);
             }
         }
