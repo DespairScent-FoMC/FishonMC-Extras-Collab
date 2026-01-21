@@ -37,8 +37,9 @@ public class TextHelper {
             case 1 -> {
                 return String.format(Locale.US,"%.1f", d).replaceAll("[\\.,]$", "");
             }
-            case 2 -> {
-                return String.format(Locale.US,"%.2f", d).replaceAll("[\\.,]$", "");
+                case 2 -> {
+                String s = String.format(Locale.US,"%.2f", d);
+                return s.replaceAll("0*$", "").replaceAll("[.,]$", "");
             }
             default -> {
                 return String.format(Locale.US,"%.0f", d).replaceAll("[\\.,]$", "");
@@ -279,7 +280,7 @@ public class TextHelper {
             HoverEvent hoverEvent = text.getStyle().getHoverEvent();
             // Check if it's a SHOW_TEXT action and extract the text
             if (hoverEvent.getAction() == HoverEvent.Action.SHOW_TEXT) {
-                Object hoverValue = hoverEvent.getValue(HoverEvent.Action.SHOW_TEXT);
+                Object hoverValue = HoverEvent.Action.SHOW_TEXT;
                 // In Minecraft 1.21.4, SHOW_TEXT value is directly a Text object
                 if (hoverValue instanceof Text hoverText) {
                     hoverTexts.add(hoverText);

@@ -61,8 +61,8 @@ public class FishCatchHandler {
 			if (System.currentTimeMillis() - this.fishCaughtTime < 2000L) {
 				if (!this.isFull) {
 					int checkedStacks = 0;
-					for (int i = minecraftClient.player.getInventory().main.size() - 1; i >= 0; i--) {
-						ItemStack stack = minecraftClient.player.getInventory().main.get(i);
+					for (int i = minecraftClient.player.getInventory().getMainStacks().size() - 1; i >= 0; i--) {
+						ItemStack stack = minecraftClient.player.getInventory().getMainStacks().get(i);
 						if (stack.isEmpty()) {
 							continue;
 						}
@@ -266,8 +266,8 @@ public class FishCatchHandler {
 
 	private void updateTrackedFish(PlayerEntity player) {
 		trackFishList.clear();
-		for (int i = player.getInventory().main.size() - 1; i >= 0; i--) {
-			ItemStack stack = player.getInventory().main.get(i);
+		for (int i = player.getInventory().getMainStacks().size() - 1; i >= 0; i--) {
+			ItemStack stack = player.getInventory().getMainStacks().get(i);
 
 			if (stack.isEmpty()) {
 				continue;
@@ -318,34 +318,28 @@ public class FishCatchHandler {
 	}
 
 	public void onFishCaughtSendDryStreak(Fish fish) {
-		if (fish.rarity == Constant.COMMON
-				&& config.fishTracker.dryStreakMessageToggles.rarityMessageToggles.showCommon ||
-				fish.rarity == Constant.RARE
-						&& config.fishTracker.dryStreakMessageToggles.rarityMessageToggles.showRare
+		if (fish.rarity == Constant.COMMON && config.fishTracker.dryStreakMessageToggles.rarityMessageToggles.showCommon
 				||
-				fish.rarity == Constant.EPIC
-						&& config.fishTracker.dryStreakMessageToggles.rarityMessageToggles.showEpic
+				fish.rarity == Constant.RARE && config.fishTracker.dryStreakMessageToggles.rarityMessageToggles.showRare
+				||
+				fish.rarity == Constant.EPIC && config.fishTracker.dryStreakMessageToggles.rarityMessageToggles.showEpic
 				||
 				fish.rarity == Constant.LEGENDARY
 						&& config.fishTracker.dryStreakMessageToggles.rarityMessageToggles.showLegendary
 				||
 				fish.rarity == Constant.MYTHICAL
 						&& config.fishTracker.dryStreakMessageToggles.rarityMessageToggles.showMythical) {
-
 			sendFishDryStreakMessage(fish.rarity,
 					ProfileDataHandler.instance().profileData.rarityDryStreak.getOrDefault(fish.rarity, 0));
 		}
 
-		if (fish.size == Constant.BABY
-				&& config.fishTracker.dryStreakMessageToggles.sizeMessageToggles.showBaby ||
+		if (fish.size == Constant.BABY && config.fishTracker.dryStreakMessageToggles.sizeMessageToggles.showBaby ||
 				fish.size == Constant.JUVENILE
 						&& config.fishTracker.dryStreakMessageToggles.sizeMessageToggles.showJuvenile
 				||
-				fish.size == Constant.ADULT
-						&& config.fishTracker.dryStreakMessageToggles.sizeMessageToggles.showAdult
+				fish.size == Constant.ADULT && config.fishTracker.dryStreakMessageToggles.sizeMessageToggles.showAdult
 				||
-				fish.size == Constant.LARGE
-						&& config.fishTracker.dryStreakMessageToggles.sizeMessageToggles.showLarge
+				fish.size == Constant.LARGE && config.fishTracker.dryStreakMessageToggles.sizeMessageToggles.showLarge
 				||
 				fish.size == Constant.GIGANTIC
 						&& config.fishTracker.dryStreakMessageToggles.sizeMessageToggles.showGigantic) {
@@ -364,7 +358,6 @@ public class FishCatchHandler {
 				||
 				fish.variant == Constant.FABLED
 						&& config.fishTracker.dryStreakMessageToggles.variantMessageToggles.showFabled) {
-
 			sendFishDryStreakMessage(fish.variant,
 					ProfileDataHandler.instance().profileData.variantDryStreak.getOrDefault(fish.variant, 0));
 		}
@@ -411,8 +404,8 @@ public class FishCatchHandler {
 			itemText = Text.literal("Shard").formatted(Formatting.GOLD);
 		} else if (item.equals("lightning bottle")) {
 			itemText = Text.literal("Lightning Bottle").formatted(Formatting.YELLOW);
-        } else {
-            itemText = Text.literal("Infusion Bottle").formatted(Formatting.AQUA);
+		} else {
+			itemText = Text.literal("Infusion Bottle").formatted(Formatting.AQUA);
 		}
 		sendDryStreakMessage(itemText, "a ", lastCaught);
 	}

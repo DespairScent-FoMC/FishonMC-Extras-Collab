@@ -11,6 +11,7 @@ import net.minecraft.nbt.NbtList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Line extends FOMCItem {
     public final String name;

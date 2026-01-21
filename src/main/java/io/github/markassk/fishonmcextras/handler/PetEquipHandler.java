@@ -99,7 +99,7 @@ public class PetEquipHandler  {
         }
     }
 
-    public void onReceiveMessage(Text message) {
+    public boolean onReceiveMessage(Text message) {
         String rawMessage = message.getString();
 
         Matcher equipMatcher = PET_EQUIP_PATTERN.matcher(rawMessage);
