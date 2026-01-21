@@ -23,21 +23,23 @@ public class AutoTippingHandler {
         return INSTANCE;
     }
 
-    public void onReceiveMessage(Text message) {
-        if (!LoadingHandler.instance().isOnServer) {
-            return;
-        }
+	public boolean onReceiveMessage(Text message) {
+		if (!LoadingHandler.instance().isOnServer) {
+			return false;
+		}
 
         String plain = message.getString();
 
         Pattern p = Pattern.compile("REACTIONS »\\s*([0-9A-Za-z_]{3,16})\\b");
         Matcher m = p.matcher(plain);
 
-        if (m.find()) {
-            String username = m.group(1);
-            onReceiveReactions(username, message);
-        }
-    }
+		if (m.find()) {
+			String username = m.group(1);
+			onReceiveReactions(username, message);
+		}
+
+		return false;
+	}
 
     private void onReceiveReactions(String username, Text message) {
         MinecraftClient client = MinecraftClient.getInstance();

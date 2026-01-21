@@ -1,5 +1,6 @@
 package io.github.markassk.fishonmcextras.FOMC.Types;
 
+import io.github.markassk.fishonmcextras.FishOnMCExtras;
 import io.github.markassk.fishonmcextras.FOMC.Constant;
 import io.github.markassk.fishonmcextras.util.ItemStackHelper;
 import io.github.markassk.fishonmcextras.util.UUIDHelper;
@@ -13,6 +14,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.UUID;
+
+import com.mojang.datafixers.kinds.Const;
 
 public class Fish extends FOMCItem {
     public final UUID id; // id
@@ -46,7 +49,11 @@ public class Fish extends FOMCItem {
         this.customModelData = customModelData;
         this.fishId = nbtCompound.getString("fish").orElse(null);
         this.scientific = nbtCompound.getString("scientific").orElse(null);
-        this.variant = Constant.valueOfId(nbtCompound.getString("variant").orElse(Constant.NORMAL.ID));
+        String variantString = nbtCompound.getString("variant").orElse(Constant.NORMAL.ID);
+        this.variant = Constant.valueOfId(variantString);
+        if (!variantString.isEmpty() && this.variant == Constant.valueOfId(Constant.NORMAL.ID) && !variantString.equals("normal")) {
+            FishOnMCExtras.LOGGER.warn("[FoE] Unknown variant string: '{}' for fish: {}", variantString, this.fishId);
+        }
         this.value = nbtCompound.getFloat("value").orElse(0f);
         this.xp = nbtCompound.getFloat("xp").orElse(0f);
         this.natureId = nbtCompound.getString("nature").orElse(null);
