@@ -88,7 +88,7 @@ public class QuestHandler {
         List<Quest> currentLocationQuests = BossBarHandler.instance().currentLocation == Location.SPAWNHUB ? this.activeQuests.get(Location.CYPRESS_LAKE) : this.activeQuests.get(BossBarHandler.instance().currentLocation);
         if(currentLocationQuests != null) {
             currentLocationQuests.forEach(quest -> {
-                if(quest.goal.equals(fish.rarity.name()) || quest.goal.equals(fish.size.name())) {
+                if(quest.goal != null && (quest.goal.equals(fish.rarity.name()) || quest.goal.equals(fish.size.name()))) {
                     quest.incrementProgress();
                 }
             });
