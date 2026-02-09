@@ -37,7 +37,7 @@ public class ContestHudHandler {
         long lastUpdatedMinutes = TimeUnit.MILLISECONDS.toMinutes(timeAgo) % 60;
         long lastUpdatedSeconds = TimeUnit.MILLISECONDS.toSeconds(timeAgo) % 60;
 
-        Text location = switch (Location.LOOKUP.valueOfId(ContestHandler.instance().location)) {
+        Text location = switch (Location.LOOKUP.valueOfTag(ContestHandler.instance().location)) {
             case SPAWNHUB -> Location.CYPRESS_LAKE.TAG;
             case UNKNOWN -> Text.literal(ContestHandler.instance().location).formatted(Formatting.WHITE);
             default -> Location.LOOKUP.valueOfTag(ContestHandler.instance().location).TAG;
